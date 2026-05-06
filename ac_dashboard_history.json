@@ -1,0 +1,501 @@
+{
+  "2026-04-21": {
+    "date": "2026.04.21",
+    "week_key": "2026-04-21",
+    "total_users": 2901,
+    "avg_min": 2,
+    "avg_sec": 50,
+    "new_users": 2509,
+    "ret_pct": 13.5,
+    "new_pct": 86.5,
+    "content_pages": [
+      {
+        "path": "/work/2023/mise-en-scene/hello-cream-x-zanmang-loopy/",
+        "title": "미쟝센 헬로크림 X 잔망루피",
+        "views": 110,
+        "dur": "2분1초"
+      },
+      {
+        "path": "/work/2026/primera/pdrnnia10-line/",
+        "title": "프리메라 PDRN‑NIA10 라인",
+        "views": 103,
+        "dur": "1분32초"
+      },
+      {
+        "path": "/work/2025/amorepacific/brand-challenge-branding-project/",
+        "title": "아모레퍼시픽 브랜드 챌린지 브랜딩 프로젝트",
+        "views": 88,
+        "dur": "0분52초"
+      },
+      {
+        "path": "/work/2026/hera/unlock-the-moment-kakaotalk-gift-limited-package/",
+        "title": "헤라 발렌타인 2026 리미티드 카카오 선물하기 패키징",
+        "views": 76,
+        "dur": "1분36초"
+      },
+      {
+        "path": "/work/2026/amorepacific/starry-moments/",
+        "title": "아모레성수 겨울 프로모션 ‘Starry Moments’",
+        "views": 68,
+        "dur": "0분53초"
+      },
+      {
+        "path": "/work/2024/amorepacific/amore-fs-gift-accessories/",
+        "title": "아모레FS, 선물 포장 악세서리 개발",
+        "views": 62,
+        "dur": "1분46초"
+      },
+      {
+        "path": "/work/2026/aestura/atobarrier365-cleansing-line/",
+        "title": "에스트라 아토베리어365 클렌징 라인",
+        "views": 56,
+        "dur": "2분11초"
+      },
+      {
+        "path": "/work/2026/mise-en-scene/perfect-serum-pop-up/",
+        "title": "미쟝센 퍼펙트세럼 팝업 @올리브영N성수",
+        "views": 54,
+        "dur": "1분45초"
+      },
+      {
+        "path": "/work/2026/primera/vita-tinol-line/",
+        "title": "프리메라 VITA-TINOL 라인",
+        "views": 53,
+        "dur": "3분33초"
+      },
+      {
+        "path": "/work/2026/primera/packaging-design-renewal-project/",
+        "title": "프리메라 제품 패키지 디자인 리뉴얼 프로젝트",
+        "views": 52,
+        "dur": "1분41초"
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Google 검색",
+        "raw": "google",
+        "sessions": 1628,
+        "dur": "3분1초",
+        "meaning": "검색해서 들어온 목적성 유입"
+      },
+      {
+        "channel": "Direct (직접 입력)",
+        "raw": "(direct)",
+        "sessions": 994,
+        "dur": "2분19초",
+        "meaning": "팬·업계 지인의 직접 방문"
+      },
+      {
+        "channel": "Pinterest",
+        "raw": "Pinterest",
+        "sessions": 894,
+        "dur": "3분33초",
+        "meaning": "기타 유입"
+      },
+      {
+        "channel": "m.search.naver.com",
+        "raw": "m.search.naver.com",
+        "sessions": 272,
+        "dur": "1분1초",
+        "meaning": "기타 유입"
+      },
+      {
+        "channel": "Naver 검색",
+        "raw": "naver",
+        "sessions": 199,
+        "dur": "3분52초",
+        "meaning": "국내 일반 검색 유입"
+      },
+      {
+        "channel": "chatgpt.com",
+        "raw": "chatgpt.com",
+        "sessions": 57,
+        "dur": "2분10초",
+        "meaning": "기타 유입"
+      },
+      {
+        "channel": "kr.pinterest.com",
+        "raw": "kr.pinterest.com",
+        "sessions": 50,
+        "dur": "1분25초",
+        "meaning": "기타 유입"
+      },
+      {
+        "channel": "Pinterest",
+        "raw": "pinterest.com",
+        "sessions": 41,
+        "dur": "3분3초",
+        "meaning": "Pinterest에서 이미지 보고 유입"
+      },
+      {
+        "channel": "Bing 검색",
+        "raw": "bing",
+        "sessions": 31,
+        "dur": "1분56초",
+        "meaning": "기타 유입"
+      },
+      {
+        "channel": "gemini.google.com",
+        "raw": "gemini.google.com",
+        "sessions": 25,
+        "dur": "4분11초",
+        "meaning": "기타 유입"
+      }
+    ],
+    "countries": [
+      {
+        "country": "South Korea",
+        "flag": "🇰🇷",
+        "users": 1965,
+        "dur": "3분0초"
+      },
+      {
+        "country": "China",
+        "flag": "🇨🇳",
+        "users": 209,
+        "dur": "3분11초"
+      },
+      {
+        "country": "United States",
+        "flag": "🇺🇸",
+        "users": 120,
+        "dur": "2분26초"
+      },
+      {
+        "country": "Singapore",
+        "flag": "🇸🇬",
+        "users": 109,
+        "dur": "1분34초"
+      },
+      {
+        "country": "Japan",
+        "flag": "🇯🇵",
+        "users": 90,
+        "dur": "2분26초"
+      },
+      {
+        "country": "Taiwan",
+        "flag": "🇹🇼",
+        "users": 50,
+        "dur": "2분16초"
+      },
+      {
+        "country": "Vietnam",
+        "flag": "🇻🇳",
+        "users": 44,
+        "dur": "2분0초"
+      },
+      {
+        "country": "Hong Kong",
+        "flag": "🇭🇰",
+        "users": 38,
+        "dur": "2분11초"
+      },
+      {
+        "country": "Thailand",
+        "flag": "🇹🇭",
+        "users": 22,
+        "dur": "1분54초"
+      },
+      {
+        "country": "France",
+        "flag": "🇫🇷",
+        "users": 21,
+        "dur": "2분25초"
+      }
+    ],
+    "ko": {
+      "new": 2510,
+      "ret": 774,
+      "total": 3284,
+      "new_pct": 76.4,
+      "ret_pct": 23.6
+    },
+    "en": {
+      "new": 478,
+      "ret": 112,
+      "total": 590,
+      "new_pct": 81.0,
+      "ret_pct": 19.0
+    },
+    "pinterest": {
+      "impressions": 1007485,
+      "clicks": 484,
+      "saves": 3356,
+      "pin_clicks": 16134,
+      "ctr": 0.05,
+      "top_pins": [
+        {
+          "pin_id": "7388786884672596",
+          "title": "Amorepacific Creatives - 프리메라 마일드 퍼펙트 클렌",
+          "link": "https://design.amorepacific.com/work/2024/primera/mild-perfect-cleansing-line/",
+          "impressions": 15200,
+          "saves": 51,
+          "clicks": 8,
+          "pin_clicks": 230
+        },
+        {
+          "pin_id": "794744665517745089",
+          "title": "Mamonde Blue Azulene Cloud Toner",
+          "link": "https://design.amorepacific.com/work/2023/mamonde/blue-azulene-cloud-toner/",
+          "impressions": 12997,
+          "saves": 40,
+          "clicks": 0,
+          "pin_clicks": 147
+        },
+        {
+          "pin_id": "794744665532805515",
+          "title": "Happy Birthday Spring at Amore Seongsu",
+          "link": "https://design.amorepacific.com/work/2025/amorepacific/happy-birthday-spring-at-amore-seongsu/",
+          "impressions": 10318,
+          "saves": 76,
+          "clicks": 4,
+          "pin_clicks": 222
+        },
+        {
+          "pin_id": "794744665516625004",
+          "title": "2023 AMOREPACIFIC FESTIVAL @COSME TOKYO",
+          "link": "https://design.amorepacific.com/work/2023/amorepacific/festival-cosme-tokyo-identity/",
+          "impressions": 10252,
+          "saves": 48,
+          "clicks": 3,
+          "pin_clicks": 118
+        },
+        {
+          "pin_id": "1407443630474853",
+          "title": "OSAN BOTANIC GARDEN x AMOREMALL GIFT ACC",
+          "link": "https://design.amorepacific.com/work/2022/amorepacific/osan-botanic-garden-x-amoremall-gift-accessory/",
+          "impressions": 9333,
+          "saves": 67,
+          "clicks": 2,
+          "pin_clicks": 169
+        }
+      ],
+      "available": true
+    }
+  },
+  "2026-05-06": {
+    "date": "2026.05.06",
+    "week_key": "2026-05-06",
+    "total_users": 2378,
+    "avg_min": 2,
+    "avg_sec": 30,
+    "new_users": 2119,
+    "ret_pct": 10.9,
+    "new_pct": 89.1,
+    "content_pages": [
+      {
+        "path": "/work/2023/mise-en-scene/hello-cream-x-zanmang-loopy/",
+        "title": "미쟝센 헬로크림 X 잔망루피",
+        "views": 74,
+        "dur": "2분10초"
+      },
+      {
+        "path": "/work/2026/sulwhasoo/the-ultimate-s-infusion-treatment/",
+        "title": "설화수 진설 인퓨전 트리트먼트",
+        "views": 44,
+        "dur": "3분11초"
+      },
+      {
+        "path": "/work/2026/mise-en-scene/perfect-serum-pop-up/",
+        "title": "미쟝센 퍼펙트세럼 팝업 @올리브영N성수",
+        "views": 37,
+        "dur": "1분48초"
+      },
+      {
+        "path": "/work/2026/sulwhasoo/the-ultimate-s-neck-cream/",
+        "title": "설화수 진설 넥크림",
+        "views": 36,
+        "dur": "0분49초"
+      },
+      {
+        "path": "/work/2026/primera/vita-tinol-line/",
+        "title": "프리메라 VITA-TINOL 라인",
+        "views": 34,
+        "dur": "1분18초"
+      },
+      {
+        "path": "/work/2026/aestura/atobarrier365-cleansing-line/",
+        "title": "에스트라 아토베리어365 클렌징 라인",
+        "views": 31,
+        "dur": "0분17초"
+      },
+      {
+        "path": "/work/2019/innisfree/toystoryxcollaboration/",
+        "title": "이니스프리 토이스토리 콜라보레이션",
+        "views": 30,
+        "dur": "0분9초"
+      },
+      {
+        "path": "/work/2023/mamonde/brand-identity-design/",
+        "title": "마몽드 브랜드 아이덴티티 디자인",
+        "views": 30,
+        "dur": "1분14초"
+      },
+      {
+        "path": "/work/2025/hera/gifting-ritual-layered-with-heart/",
+        "title": "헤라 추석 기프팅 포장재 디자인",
+        "views": 30,
+        "dur": "1분35초"
+      },
+      {
+        "path": "/work/2026/amorepacific/starry-moments/",
+        "title": "아모레성수 겨울 프로모션 ‘Starry Moments’",
+        "views": 30,
+        "dur": "1분19초"
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Google 검색",
+        "raw": "google",
+        "sessions": 1060,
+        "dur": "3분42초",
+        "meaning": "검색해서 들어온 목적성 유입"
+      },
+      {
+        "channel": "Direct (직접 입력)",
+        "raw": "(direct)",
+        "sessions": 993,
+        "dur": "1분23초",
+        "meaning": "팬·업계 지인의 직접 방문"
+      },
+      {
+        "channel": "Pinterest",
+        "raw": "Pinterest",
+        "sessions": 591,
+        "dur": "3분16초",
+        "meaning": "기타 유입"
+      },
+      {
+        "channel": "m.search.naver.com",
+        "raw": "m.search.naver.com",
+        "sessions": 296,
+        "dur": "0분35초",
+        "meaning": "기타 유입"
+      },
+      {
+        "channel": "Naver 검색",
+        "raw": "naver",
+        "sessions": 119,
+        "dur": "3분34초",
+        "meaning": "국내 일반 검색 유입"
+      },
+      {
+        "channel": "chatgpt.com",
+        "raw": "chatgpt.com",
+        "sessions": 52,
+        "dur": "3분18초",
+        "meaning": "기타 유입"
+      },
+      {
+        "channel": "Pinterest",
+        "raw": "pinterest.com",
+        "sessions": 25,
+        "dur": "1분42초",
+        "meaning": "Pinterest에서 이미지 보고 유입"
+      },
+      {
+        "channel": "Bing 검색",
+        "raw": "bing",
+        "sessions": 19,
+        "dur": "3분5초",
+        "meaning": "기타 유입"
+      },
+      {
+        "channel": "kr.pinterest.com",
+        "raw": "kr.pinterest.com",
+        "sessions": 17,
+        "dur": "1분28초",
+        "meaning": "기타 유입"
+      },
+      {
+        "channel": "statics.teams.cdn.office.net",
+        "raw": "statics.teams.cdn.office.net",
+        "sessions": 12,
+        "dur": "0분37초",
+        "meaning": "기타 유입"
+      }
+    ],
+    "countries": [
+      {
+        "country": "South Korea",
+        "flag": "🇰🇷",
+        "users": 1512,
+        "dur": "2분55초"
+      },
+      {
+        "country": "China",
+        "flag": "🇨🇳",
+        "users": 194,
+        "dur": "1분48초"
+      },
+      {
+        "country": "Singapore",
+        "flag": "🇸🇬",
+        "users": 171,
+        "dur": "1분17초"
+      },
+      {
+        "country": "United States",
+        "flag": "🇺🇸",
+        "users": 122,
+        "dur": "1분46초"
+      },
+      {
+        "country": "Japan",
+        "flag": "🇯🇵",
+        "users": 63,
+        "dur": "1분23초"
+      },
+      {
+        "country": "Hong Kong",
+        "flag": "🇭🇰",
+        "users": 33,
+        "dur": "1분24초"
+      },
+      {
+        "country": "Thailand",
+        "flag": "🇹🇭",
+        "users": 32,
+        "dur": "1분45초"
+      },
+      {
+        "country": "Vietnam",
+        "flag": "🇻🇳",
+        "users": 21,
+        "dur": "3분9초"
+      },
+      {
+        "country": "Taiwan",
+        "flag": "🇹🇼",
+        "users": 19,
+        "dur": "2분58초"
+      },
+      {
+        "country": "France",
+        "flag": "🇫🇷",
+        "users": 17,
+        "dur": "3분57초"
+      }
+    ],
+    "ko": {
+      "new": 2117,
+      "ret": 525,
+      "total": 2642,
+      "new_pct": 80.1,
+      "ret_pct": 19.9
+    },
+    "en": {
+      "new": 575,
+      "ret": 63,
+      "total": 638,
+      "new_pct": 90.1,
+      "ret_pct": 9.9
+    },
+    "pinterest": {
+      "available": false,
+      "error": "HTTP Error 401: Unauthorized"
+    }
+  }
+}
