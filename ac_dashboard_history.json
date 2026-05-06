@@ -277,18 +277,18 @@
   "2026-05-06": {
     "date": "2026.05.06",
     "week_key": "2026-05-06",
-    "total_users": 2378,
+    "total_users": 2391,
     "avg_min": 2,
-    "avg_sec": 30,
-    "new_users": 2119,
+    "avg_sec": 31,
+    "new_users": 2130,
     "ret_pct": 10.9,
     "new_pct": 89.1,
     "content_pages": [
       {
         "path": "/work/2023/mise-en-scene/hello-cream-x-zanmang-loopy/",
         "title": "미쟝센 헬로크림 X 잔망루피",
-        "views": 74,
-        "dur": "2분10초"
+        "views": 76,
+        "dur": "2분6초"
       },
       {
         "path": "/work/2026/sulwhasoo/the-ultimate-s-infusion-treatment/",
@@ -305,8 +305,8 @@
       {
         "path": "/work/2026/sulwhasoo/the-ultimate-s-neck-cream/",
         "title": "설화수 진설 넥크림",
-        "views": 36,
-        "dur": "0분49초"
+        "views": 37,
+        "dur": "0분48초"
       },
       {
         "path": "/work/2026/primera/vita-tinol-line/",
@@ -317,8 +317,14 @@
       {
         "path": "/work/2026/aestura/atobarrier365-cleansing-line/",
         "title": "에스트라 아토베리어365 클렌징 라인",
+        "views": 32,
+        "dur": "0분53초"
+      },
+      {
+        "path": "/work/2025/hera/gifting-ritual-layered-with-heart/",
+        "title": "헤라 추석 기프팅 포장재 디자인",
         "views": 31,
-        "dur": "0분17초"
+        "dur": "1분31초"
       },
       {
         "path": "/work/2019/innisfree/toystoryxcollaboration/",
@@ -333,12 +339,6 @@
         "dur": "1분14초"
       },
       {
-        "path": "/work/2025/hera/gifting-ritual-layered-with-heart/",
-        "title": "헤라 추석 기프팅 포장재 디자인",
-        "views": 30,
-        "dur": "1분35초"
-      },
-      {
         "path": "/work/2026/amorepacific/starry-moments/",
         "title": "아모레성수 겨울 프로모션 ‘Starry Moments’",
         "views": 30,
@@ -349,22 +349,22 @@
       {
         "channel": "Google 검색",
         "raw": "google",
-        "sessions": 1060,
-        "dur": "3분42초",
+        "sessions": 1073,
+        "dur": "3분41초",
         "meaning": "검색해서 들어온 목적성 유입"
       },
       {
         "channel": "Direct (직접 입력)",
         "raw": "(direct)",
-        "sessions": 993,
-        "dur": "1분23초",
+        "sessions": 1002,
+        "dur": "1분26초",
         "meaning": "팬·업계 지인의 직접 방문"
       },
       {
         "channel": "Pinterest",
         "raw": "Pinterest",
-        "sessions": 591,
-        "dur": "3분16초",
+        "sessions": 597,
+        "dur": "3분17초",
         "meaning": "기타 유입"
       },
       {
@@ -377,8 +377,8 @@
       {
         "channel": "Naver 검색",
         "raw": "naver",
-        "sessions": 119,
-        "dur": "3분34초",
+        "sessions": 120,
+        "dur": "3분32초",
         "meaning": "국내 일반 검색 유입"
       },
       {
@@ -421,26 +421,26 @@
       {
         "country": "South Korea",
         "flag": "🇰🇷",
-        "users": 1512,
-        "dur": "2분55초"
+        "users": 1521,
+        "dur": "2분56초"
       },
       {
         "country": "China",
         "flag": "🇨🇳",
-        "users": 194,
-        "dur": "1분48초"
+        "users": 195,
+        "dur": "1분50초"
       },
       {
         "country": "Singapore",
         "flag": "🇸🇬",
-        "users": 171,
-        "dur": "1분17초"
+        "users": 173,
+        "dur": "1분16초"
       },
       {
         "country": "United States",
         "flag": "🇺🇸",
-        "users": 122,
-        "dur": "1분46초"
+        "users": 123,
+        "dur": "1분50초"
       },
       {
         "country": "Japan",
@@ -451,14 +451,14 @@
       {
         "country": "Hong Kong",
         "flag": "🇭🇰",
-        "users": 33,
-        "dur": "1분24초"
+        "users": 34,
+        "dur": "1분21초"
       },
       {
         "country": "Thailand",
         "flag": "🇹🇭",
         "users": 32,
-        "dur": "1분45초"
+        "dur": "1분44초"
       },
       {
         "country": "Vietnam",
@@ -470,7 +470,7 @@
         "country": "Taiwan",
         "flag": "🇹🇼",
         "users": 19,
-        "dur": "2분58초"
+        "dur": "2분51초"
       },
       {
         "country": "France",
@@ -480,22 +480,73 @@
       }
     ],
     "ko": {
-      "new": 2117,
-      "ret": 525,
-      "total": 2642,
-      "new_pct": 80.1,
-      "ret_pct": 19.9
+      "new": 2128,
+      "ret": 527,
+      "total": 2655,
+      "new_pct": 80.2,
+      "ret_pct": 19.8
     },
     "en": {
-      "new": 575,
-      "ret": 63,
-      "total": 638,
-      "new_pct": 90.1,
-      "ret_pct": 9.9
+      "new": 578,
+      "ret": 64,
+      "total": 642,
+      "new_pct": 90.0,
+      "ret_pct": 10.0
     },
     "pinterest": {
-      "available": false,
-      "error": "HTTP Error 401: Unauthorized"
+      "available": true,
+      "impressions": 757625,
+      "clicks": 308,
+      "saves": 2806,
+      "pin_clicks": 13053,
+      "ctr": 0.04,
+      "top_pins": [
+        {
+          "pin_id": "7388786884672596",
+          "title": "Amorepacific Creatives - 프리메라 마일드 퍼펙트 클렌",
+          "link": "https://design.amorepacific.com/work/2024/primera/mild-perfect-cleansing-line/",
+          "impressions": 12095,
+          "saves": 43,
+          "clicks": 6,
+          "pin_clicks": 207
+        },
+        {
+          "pin_id": "794744665511928370",
+          "title": "2021 IOPE Super Vital Bio Potential Crea",
+          "link": "https://design.amorepacific.com/work/2021/iope/supervitalbio/",
+          "impressions": 10871,
+          "saves": 30,
+          "clicks": 4,
+          "pin_clicks": 206
+        },
+        {
+          "pin_id": "794744665517745089",
+          "title": "Mamonde Blue Azulene Cloud Toner",
+          "link": "https://design.amorepacific.com/work/2023/mamonde/blue-azulene-cloud-toner/",
+          "impressions": 8954,
+          "saves": 19,
+          "clicks": 1,
+          "pin_clicks": 109
+        },
+        {
+          "pin_id": "794744665532805515",
+          "title": "Happy Birthday Spring at Amore Seongsu",
+          "link": "https://design.amorepacific.com/work/2025/amorepacific/happy-birthday-spring-at-amore-seongsu/",
+          "impressions": 8620,
+          "saves": 58,
+          "clicks": 2,
+          "pin_clicks": 152
+        },
+        {
+          "pin_id": "1407443630474853",
+          "title": "OSAN BOTANIC GARDEN x AMOREMALL GIFT ACC",
+          "link": "https://design.amorepacific.com/work/2022/amorepacific/osan-botanic-garden-x-amoremall-gift-accessory/",
+          "impressions": 7918,
+          "saves": 45,
+          "clicks": 2,
+          "pin_clicks": 122
+        }
+      ]
     }
   }
 }
