@@ -1170,6 +1170,16 @@ function render(period) {
     void el.offsetWidth;
     el.classList.add('fade-in');
   });
+
+  // 탭 전환 후 새로 렌더된 국기 이모지에 Twemoji 재적용
+  if (typeof twemoji !== 'undefined') {
+    twemoji.parse(document.body, {
+      folder: 'svg',
+      ext: '.svg',
+      base: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/',
+      className: 'emoji'
+    });
+  }
 }
 
 document.querySelectorAll('#period-toggle button').forEach(btn => {
