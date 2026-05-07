@@ -394,13 +394,13 @@ def collect_pinterest_period(days: int):
          **({} if has_delta else no_delta)},
     ]
 
-    # Top 5 핀
+    # Top 10 핀
     top = []
     try:
         pins_url = (f"https://api.pinterest.com/v5/user_account/analytics/top_pins"
                     f"?start_date={s}&end_date={e}"
-                    f"&sort_by=IMPRESSION&num_of_pins=5")
-        for i, pin in enumerate(api_get(pins_url).get("pins", [])[:5]):
+                    f"&sort_by=IMPRESSION&num_of_pins=10")
+        for i, pin in enumerate(api_get(pins_url).get("pins", [])[:10]):
             pin_id  = pin.get("pin_id", "")
             metrics = pin.get("metrics", {})
             title   = f"핀 #{pin_id[-6:]}"
@@ -451,7 +451,7 @@ def format_ig(ig_all: dict, period_key: str, pl_ko: str) -> dict:
          "likes":    p.get("likes", 0),
          "saves":    p.get("saves", 0),
          "comments": p.get("comments", 0)}
-        for p in d.get("top5", [])
+        for p in d.get("top10", [])
     ]
     return {"kpi": kpi, "top": top, "growth": d.get("growth")}
 
