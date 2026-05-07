@@ -1,4 +1,90 @@
-<details><summary>📋 update.yml 내용 (클릭해서 보기)</summary>
-로컬에 이미 저장됐으니 C:\Users\amore\ac-dashboard\.github\workflows\update.yml 파일 내용을 복사해서 붙여넣으면 돼.
+name: AC Dashboard Auto Update
 
-</details>
+on:
+  schedule:
+    # 매주 월요일 오전 10:00 KST (= 01:00 UTC)
+    - cron: '0 1 * * 1'
+  workflow_dispatch:   # GitHub Actions 페이지에서 수동 실행도 가능
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. 저장소 체크아웃 ──────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Python 설정 ──────────────────────────────────────
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      # ── 3. 의존성 설치 ──────────────────────────────────────
+      - name: Install dependencies
+        run: |
+          pip install \
+            google-analytics-data \
+            google-auth \
+            python-dotenv
+
+      # ── 4. GA4 서비스 계정 JSON 파일 생성 ───────────────────
+      - name: Write GA4 service account credentials
+        env:
+          GA4_SA_JSON: ${{ secrets.GA4_SA_JSON }}
+        run: echo "$GA4_SA_JSON" > service_account.json
+
+      # ── 5. 전체 업데이트 실행 ────────────────────────────────
+      - name: Run auto_update.py
+        env:
+          GA4_PROPERTY_ID:      ${{ secrets.GA4_PROPERTY_ID }}
+          GA4_SERVICE_ACCOUNT_JSON: service_account.json
+          PINTEREST_TOKEN:      ${{ secrets.PINTEREST_TOKEN }}
+          INSTAGRAM_TOKEN:      ${{ secrets.INSTAGRAM_TOKEN }}
+          INSTAGRAM_ACCOUNT_ID: ${{ secrets.INSTAGRAM_ACCOUNT_ID }}
+          GITHUB_TOKEN:         ${{ secrets.GH_PAT }}
+          GITHUB_USERNAME:      goooodmin
+          GITHUB_REPO:          ac-dashboard
+        run: python auto_update.py
+
+      # ── 6. Instagram 토큰 갱신 (60일 → 60일 자동 연장) ──────
+      - name: Refresh Instagram access token
+        id: ig_refresh
+        env:
+          INSTAGRAM_TOKEN: ${{ secrets.INSTAGRAM_TOKEN }}
+        run: |
+          NEW_TOKEN=$(python - <<'PYEOF'
+          import os, json, urllib.request, sys
+          token = os.environ.get("INSTAGRAM_TOKEN", "")
+          if not token:
+              print("SKIP")
+              sys.exit(0)
+          url = (f"https://graph.instagram.com/refresh_access_token"
+                 f"?grant_type=ig_refresh_token&access_token={token}")
+          try:
+              with urllib.request.urlopen(url) as r:
+                  data = json.loads(r.read())
+              new = data.get("access_token", "")
+              days = int(data.get("expires_in", 0)) // 86400
+              print(new, file=sys.stderr)   # 로그용 (출력에는 안 남음)
+              print(new)                    # 캡처용
+              print(f"  토큰 갱신 완료 — 유효기간 {days}일", file=sys.stderr)
+          except Exception as e:
+              print(f"  토큰 갱신 실패: {e}", file=sys.stderr)
+              print("FAILED")
+          PYEOF
+          )
+          echo "new_token=$NEW_TOKEN" >> $GITHUB_OUTPUT
+
+      - name: Update INSTAGRAM_TOKEN secret
+        if: |
+          steps.ig_refresh.outputs.new_token != 'FAILED' &&
+          steps.ig_refresh.outputs.new_token != 'SKIP' &&
+          steps.ig_refresh.outputs.new_token != ''
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          echo "${{ steps.ig_refresh.outputs.new_token }}" | gh secret set INSTAGRAM_TOKEN
+          echo "  INSTAGRAM_TOKEN 시크릿 업데이트 완료"
