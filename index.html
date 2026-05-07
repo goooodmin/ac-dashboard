@@ -133,6 +133,9 @@
   .ig-pending .ig-pending-title { font-size: 14px; font-weight: 600; color: var(--ink-2); margin-bottom: 8px; }
   .ig-pending .ig-pending-desc { font-size: 13px; line-height: 1.7; }
   .ig-pending code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--paper-soft); border: 1px solid var(--line); padding: 1px 6px; border-radius: 2px; color: var(--ink-2); }
+  .api-limit-notice { display: flex; align-items: flex-start; gap: 8px; background: #f5f6fa; border-left: 3px solid #8b9dc3; border-radius: 0 4px 4px 0; padding: 10px 14px; margin-bottom: 16px; font-size: 12.5px; color: #4a5568; line-height: 1.6; }
+  .api-limit-icon { font-size: 14px; color: #6b7fa3; flex-shrink: 0; margin-top: 1px; font-style: normal; }
+  .api-limit-text b { font-weight: 600; color: #2d3748; }
   .footer { margin-top: 64px; padding-top: 18px; border-top: 1px solid var(--line); font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; letter-spacing: 0.02em; }
   .fade-in { animation: fadeIn 0.25s ease; }
   @keyframes fadeIn { from { opacity: 0.4; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
@@ -377,6 +380,7 @@
       <span class="tag" id="pin-kpi-tag">WEEK · APR 15–21</span>
     </div>
     <p class="section-lede">계정 전체 기준. 노출은 도달 규모, 저장은 콘텐츠 매력도, 클릭은 사이트 유입의 강도.</p>
+    <div id="pin-api-notice"></div>
     <div class="kpi-grid" id="pin-kpi-grid"></div>
   </section>
 
@@ -451,6 +455,7 @@
       <span class="tag">FOLLOWER GROWTH</span>
     </div>
     <p class="section-lede">기간별 팔로워 변화 흐름. 콘텐츠 이벤트와 팔로워 증감의 상관을 읽는다.</p>
+    <div id="ig-growth-notice"></div>
     <div class="data-with-annotation">
       <div id="ig-growth-wrap"></div>
       <aside class="annotation">
@@ -930,6 +935,13 @@ function pendingBlock(msg) {
   </div>`;
 }
 
+function apiLimitBlock(msg) {
+  return `<div class="api-limit-notice">
+    <span class="api-limit-icon">ℹ</span>
+    <span class="api-limit-text">${msg}</span>
+  </div>`;
+}
+
 /* ── 렌더 함수 ─────────────────────────────────────── */
 function renderKPI(containerId, kpiData) {
   document.getElementById(containerId).innerHTML = kpiData.map(k => `
@@ -1110,10 +1122,44 @@ function render(period) {
   renderNewRetChart(d.newRet);
   renderNewRetSummary(d.newRet);
   renderCountries(d.countries);
+
+  // ── Pinterest API 한계 안내 ──────────────────────────────
+  const pinNotice = document.getElementById('pin-api-notice');
+  if (period === 'quarter') {
+    pinNotice.innerHTML = apiLimitBlock(
+      '<b>Pinterest API 조회 한도 안내</b> · 분기(90일)가 Pinterest API의 최대 조회 가능 기간입니다. ' +
+      '전년 대비(YoY) 비교는 API에서 제공하지 않아 표시되지 않습니다.'
+    );
+  } else if (period === 'year') {
+    pinNotice.innerHTML = apiLimitBlock(
+      '<b>Pinterest API 조회 한도 안내</b> · Pinterest API는 최대 90일(분기)까지만 조회 가능합니다. ' +
+      '연간 데이터는 실시간 API로 제공이 불가하며, 현재 표시된 수치는 분기 데이터와 동일한 90일 기준입니다.'
+    );
+  } else {
+    pinNotice.innerHTML = '';
+  }
+
   renderKPI('pin-kpi-grid', d.pin.kpi);
   renderPinTop(d.pin.top);
   renderKPI('ig-kpi-grid', d.ig.kpi);
   renderIGTop(d.ig);
+
+  // ── Instagram 팔로워 증감 API 한계 안내 ──────────────────
+  const igGrowthNotice = document.getElementById('ig-growth-notice');
+  if (period === 'quarter') {
+    igGrowthNotice.innerHTML = apiLimitBlock(
+      '<b>Instagram 팔로워 데이터 한도 안내</b> · Instagram Graph API는 팔로워 증감(follower_count) 데이터를 ' +
+      '최근 30일까지만 제공합니다. 분기 그래프는 수집 가능한 최근 30일 데이터로 표시됩니다.'
+    );
+  } else if (period === 'year') {
+    igGrowthNotice.innerHTML = apiLimitBlock(
+      '<b>Instagram 팔로워 데이터 한도 안내</b> · Instagram Graph API는 팔로워 증감(follower_count) 데이터를 ' +
+      '최근 30일까지만 제공합니다. 연간 팔로워 추이는 제공이 불가하며, 최근 30일 데이터가 표시됩니다.'
+    );
+  } else {
+    igGrowthNotice.innerHTML = '';
+  }
+
   renderIGGrowth(d.ig);
   document.querySelectorAll('.section').forEach(el => {
     el.classList.remove('fade-in');
