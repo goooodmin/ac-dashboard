@@ -257,12 +257,12 @@ def collect_pinterest_data():
         pins_url = (
             f"https://api.pinterest.com/v5/user_account/analytics/top_pins"
             f"?start_date={start_date}&end_date={end_date}"
-            f"&sort_by=IMPRESSION&num_of_pins=5"
+            f"&sort_by=IMPRESSION&num_of_pins=10"
         )
         pins_data = api_get(pins_url)
 
         top_pins = []
-        for pin in pins_data.get("pins", [])[:5]:
+        for pin in pins_data.get("pins", [])[:10]:
             pin_id = pin.get("pin_id", "")
             metrics = pin.get("metrics", {})
             title = "제목 없음"
@@ -443,7 +443,7 @@ def collect_instagram_data():
         def top5_for(days):
             cutoff = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
             filtered = [p for p in posts if p["date"] >= cutoff] or posts
-            top = filtered[:5]
+            top = filtered[:10]
             # 저장 수 추가
             for p in top:
                 if "saves" not in p:
@@ -488,28 +488,28 @@ def collect_instagram_data():
                 "reach":              period_data["week"]["reach"],
                 "total_interactions": period_data["week"]["total_interactions"],
                 "accounts_engaged":   period_data["week"]["accounts_engaged"],
-                "top5":   top5_for(7),
+                "top10":  top5_for(7),
                 "growth": build_growth_chart(period_data["week"]["growth_raw"], followers),
             },
             "month": {
                 "reach":              period_data["month"]["reach"],
                 "total_interactions": period_data["month"]["total_interactions"],
                 "accounts_engaged":   period_data["month"]["accounts_engaged"],
-                "top5":   top5_for(30),
+                "top10":  top5_for(30),
                 "growth": build_growth_chart(period_data["month"]["growth_raw"], followers),
             },
             "quarter": {
                 "reach":              period_data["quarter"]["reach"],
                 "total_interactions": period_data["quarter"]["total_interactions"],
                 "accounts_engaged":   period_data["quarter"]["accounts_engaged"],
-                "top5":   top5_for(90),
+                "top10":  top5_for(90),
                 "growth": build_growth_chart(period_data["quarter"]["growth_raw"], followers),
             },
             "year": {
                 "reach":              period_data["year"]["reach"],
                 "total_interactions": period_data["year"]["total_interactions"],
                 "accounts_engaged":   period_data["year"]["accounts_engaged"],
-                "top5":   top5_for(365),
+                "top10":  top5_for(365),
                 "growth": build_growth_chart(period_data["year"]["growth_raw"], followers),
             },
         }
