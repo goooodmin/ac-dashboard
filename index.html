@@ -136,6 +136,70 @@
   .footer { margin-top: 64px; padding-top: 18px; border-top: 1px solid var(--line); font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; letter-spacing: 0.02em; }
   .fade-in { animation: fadeIn 0.25s ease; }
   @keyframes fadeIn { from { opacity: 0.4; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── 모바일 반응형 ───────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    /* 전체 여백 */
+    .wrap { padding: 20px 16px 48px; }
+
+    /* 헤더: 한 줄 → 세로 스택 */
+    .masthead { grid-template-columns: 1fr; gap: 6px; padding-bottom: 14px; }
+    .masthead h1 { font-size: 21px; }
+    .masthead h1 .en { display: block; margin-left: 0; margin-top: 5px; font-size: 13px; }
+    .masthead .stamp { text-align: left; font-size: 10px; }
+    .masthead .stamp strong { font-size: 13px; display: inline; margin-right: 6px; margin-bottom: 0; }
+
+    /* 섭헤드 */
+    .subhead { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .sitename { font-size: 11px; }
+
+    /* 섹션 간격 */
+    .section { margin-top: 32px; }
+    .section.major-break { margin-top: 44px; padding-top: 26px; }
+    .section-title .tag { display: none; }
+    .section-title h2 { font-size: 16px; }
+    .section-lede { font-size: 13px; margin-bottom: 16px; }
+
+    /* KPI 그리드: 4열 → 2열 */
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .kpi { padding: 16px 16px 14px; }
+    .kpi .kpi-value { font-size: 26px; }
+    .kpi .kpi-label { margin-bottom: 8px; }
+
+    /* 테이블 + 주석: 2열 → 1열 */
+    .data-with-annotation { grid-template-columns: 1fr; gap: 20px; }
+    .annotation { position: static; border-top: 1px solid var(--line-2); padding-top: 14px; }
+
+    /* 테이블: auto 레이아웃 전환 + 바/의미 열 숨김 */
+    .data-table { table-layout: auto; }
+    .data-table .bar-cell { display: none; }
+    .data-table th.chart-col { display: none; }
+    .data-table .meaning { display: none; }
+    .data-table th.meaning-th { display: none; }
+    .data-table td { padding: 11px 10px 11px 0; font-size: 13px; }
+    .data-table th { padding: 9px 10px 9px 0; }
+
+    /* SVG 차트 높이 축소 */
+    .chart-svg { height: 200px; }
+    .chart-card { padding: 16px 16px 12px; }
+
+    /* 신규/재방문 박스: 2열 유지 (작아도 읽힘) */
+    .newret-summary { gap: 10px; }
+    .newret-box { padding: 12px 14px; }
+    .newret-box .total { font-size: 18px; }
+
+    /* 푸터 */
+    .footer { flex-direction: column; gap: 4px; }
+  }
+
+  /* 소형 폰 추가 조정 */
+  @media (max-width: 480px) {
+    .kpi .kpi-value { font-size: 22px; }
+    .kpi-grid { gap: 1px; }
+    .newret-summary { grid-template-columns: 1fr; }
+    .toggle button { padding: 7px 12px; font-size: 11px; }
+    .masthead h1 { font-size: 19px; }
+  }
 </style>
 </head>
 <body>
@@ -224,7 +288,7 @@
             <th style="text-align:right">세션</th>
             <th class="chart-col" style="text-align:left; padding-left: 14px;">세션 점유</th>
             <th style="text-align:right">체류</th>
-            <th>데이터의 의미</th>
+            <th class="meaning-th">데이터의 의미</th>
           </tr>
         </thead>
         <tbody id="source-tbody"></tbody>
