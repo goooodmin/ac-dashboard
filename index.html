@@ -206,7 +206,57 @@
 </style>
 </head>
 <body>
+<!-- 비밀번호 게이트 -->
+<div id="gate" style="
+  position:fixed; inset:0; z-index:9999;
+  background:#ffffff;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Pretendard Variable','Pretendard','Inter',sans-serif;
+">
+  <div style="width:320px;">
+    <div style="font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:0.08em;color:#6b6b6b;margin-bottom:20px;">AC DASHBOARD</div>
+    <div style="font-size:22px;font-weight:800;letter-spacing:-0.03em;color:#0f0f0f;margin-bottom:6px;">접근 제한</div>
+    <div style="font-size:13px;color:#6b6b6b;margin-bottom:28px;line-height:1.6;">이 대시보드는 내부 열람용입니다.<br>비밀번호를 입력해 주세요.</div>
+    <input id="gate-input" type="password" placeholder="비밀번호" style="
+      width:100%; padding:12px 14px; font-size:14px;
+      font-family:'Pretendard Variable','Pretendard',sans-serif;
+      border:1px solid #e5e5e3; border-radius:2px;
+      outline:none; color:#0f0f0f; background:#fff;
+      box-sizing:border-box; margin-bottom:8px;
+      transition:border-color 0.15s;
+    " />
+    <div id="gate-error" style="font-size:12px;color:#b4421c;min-height:18px;margin-bottom:10px;"></div>
+    <button onclick="checkPassword()" style="
+      width:100%; padding:12px; font-size:14px; font-weight:600;
+      font-family:'Pretendard Variable','Pretendard',sans-serif;
+      background:#0f0f0f; color:#fff; border:none; border-radius:2px;
+      cursor:pointer; letter-spacing:-0.01em;
+    ">입장</button>
+  </div>
+</div>
 
+<script>
+(function(){
+  if(sessionStorage.getItem('ac_auth')==='1'){
+    document.getElementById('gate').style.display='none';
+  }
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Enter') checkPassword();
+  });
+})();
+function checkPassword(){
+  var pw = document.getElementById('gate-input').value;
+  if(pw==='amore12345'){
+    sessionStorage.setItem('ac_auth','1');
+    document.getElementById('gate').style.display='none';
+  } else {
+    document.getElementById('gate-error').textContent='비밀번호가 올바르지 않습니다.';
+    document.getElementById('gate-input').style.borderColor='#b4421c';
+    document.getElementById('gate-input').value='';
+    document.getElementById('gate-input').focus();
+  }
+}
+</script>
 <div class="wrap">
 
   <header class="masthead">
