@@ -48,7 +48,50 @@ jobs:
           GITHUB_REPO:          ac-dashboard
         run: python auto_update.py
 
-      # ── 6. Instagram 토큰 갱신 (60일 → 60일 자동 연장) ──────
+      # ── 6. Pinterest 토큰 갱신 (refresh_token은 매 호출 시 회전됨) ──
+      - name: Refresh Pinterest token and rotate secrets
+        env:
+          PINTEREST_REFRESH_TOKEN: ${{ secrets.PINTEREST_REFRESH_TOKEN }}
+          PINTEREST_APP_ID:        ${{ secrets.PINTEREST_APP_ID }}
+          PINTEREST_APP_SECRET:    ${{ secrets.PINTEREST_APP_SECRET }}
+          GH_TOKEN:                ${{ secrets.GH_PAT }}
+        run: |
+          python - <<'PYEOF'
+          import os, json, base64, http.client, ssl, urllib.parse, subprocess, sys
+
+          app_id     = os.environ["PINTEREST_APP_ID"]
+          app_secret = os.environ["PINTEREST_APP_SECRET"]
+          refresh    = os.environ["PINTEREST_REFRESH_TOKEN"]
+
+          creds = base64.b64encode(f"{app_id}:{app_secret}".encode()).decode()
+          body = urllib.parse.urlencode({
+              "grant_type": "refresh_token",
+              "refresh_token": refresh,
+          }).encode()
+
+          ctx = ssl.create_default_context()
+          conn = http.client.HTTPSConnection("api.pinterest.com", context=ctx)
+          conn.request("POST", "/v5/oauth/token", body=body, headers={
+              "Authorization": f"Basic {creds}",
+              "Content-Type": "application/x-www-form-urlencoded",
+          })
+          res = conn.getresponse()
+          result = json.loads(res.read().decode())
+
+          if res.status != 200 or "access_token" not in result or "refresh_token" not in result:
+              print(f"  Pinterest 토큰 갱신 실패 (status {res.status})", file=sys.stderr)
+              sys.exit(0)  # 메인 업데이트는 이미 끝났으므로 워크플로우 자체는 실패시키지 않음
+
+          # 토큰 값은 절대 stdout/stderr에 출력하지 않고 gh secret set의 stdin으로만 전달
+          subprocess.run(["gh", "secret", "set", "PINTEREST_TOKEN"],
+                          input=result["access_token"], text=True, check=True)
+          subprocess.run(["gh", "secret", "set", "PINTEREST_REFRESH_TOKEN"],
+                          input=result["refresh_token"], text=True, check=True)
+
+          print("  Pinterest 액세스 토큰 + 리프레시 토큰 갱신 완료")
+          PYEOF
+
+      # ── 7. Instagram 토큰 갱신 (60일 → 60일 자동 연장) ──────
       - name: Refresh Instagram access token
         id: ig_refresh
         env:
