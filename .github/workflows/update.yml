@@ -92,41 +92,37 @@ jobs:
           PYEOF
 
       # ── 7. Instagram 토큰 갱신 (60일 → 60일 자동 연장) ──────
-      - name: Refresh Instagram access token
-        id: ig_refresh
+      - name: Refresh Instagram token and update secret
         env:
           INSTAGRAM_TOKEN: ${{ secrets.INSTAGRAM_TOKEN }}
+          GH_TOKEN:        ${{ secrets.GH_PAT }}
         run: |
-          NEW_TOKEN=$(python - <<'PYEOF'
-          import os, json, urllib.request, sys
+          python - <<'PYEOF'
+          import os, json, urllib.request, subprocess, sys
+
           token = os.environ.get("INSTAGRAM_TOKEN", "")
           if not token:
-              print("SKIP")
+              print("  INSTAGRAM_TOKEN 없음 — 건너뜀")
               sys.exit(0)
+
           url = (f"https://graph.instagram.com/refresh_access_token"
                  f"?grant_type=ig_refresh_token&access_token={token}")
           try:
               with urllib.request.urlopen(url) as r:
                   data = json.loads(r.read())
-              new = data.get("access_token", "")
-              days = int(data.get("expires_in", 0)) // 86400
-              print(new, file=sys.stderr)   # 로그용 (출력에는 안 남음)
-              print(new)                    # 캡처용
-              print(f"  토큰 갱신 완료 — 유효기간 {days}일", file=sys.stderr)
           except Exception as e:
-              print(f"  토큰 갱신 실패: {e}", file=sys.stderr)
-              print("FAILED")
-          PYEOF
-          )
-          echo "new_token=$NEW_TOKEN" >> $GITHUB_OUTPUT
+              print(f"  Instagram 토큰 갱신 실패: {e}", file=sys.stderr)
+              sys.exit(0)  # 메인 업데이트는 이미 끝났으므로 워크플로우 자체는 실패시키지 않음
 
-      - name: Update INSTAGRAM_TOKEN secret
-        if: |
-          steps.ig_refresh.outputs.new_token != 'FAILED' &&
-          steps.ig_refresh.outputs.new_token != 'SKIP' &&
-          steps.ig_refresh.outputs.new_token != ''
-        env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}
-        run: |
-          echo "${{ steps.ig_refresh.outputs.new_token }}" | gh secret set INSTAGRAM_TOKEN
-          echo "  INSTAGRAM_TOKEN 시크릿 업데이트 완료"
+          new_token = data.get("access_token", "")
+          if not new_token:
+              print("  Instagram 응답에 access_token 없음", file=sys.stderr)
+              sys.exit(0)
+
+          days = int(data.get("expires_in", 0)) // 86400
+
+          # 토큰 값은 stdout/stderr에 출력하지 않고 gh secret set의 stdin으로만 전달
+          subprocess.run(["gh", "secret", "set", "INSTAGRAM_TOKEN"],
+                          input=new_token, text=True, check=True)
+          print(f"  Instagram 토큰 갱신 완료 — 유효기간 {days}일")
+          PYEOF
