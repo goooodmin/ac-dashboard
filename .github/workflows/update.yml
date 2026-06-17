@@ -91,38 +91,47 @@ jobs:
           print("  Pinterest 액세스 토큰 + 리프레시 토큰 갱신 완료")
           PYEOF
 
-      # ── 7. Instagram 토큰 갱신 (60일 → 60일 자동 연장) ──────
+      # ── 7. Instagram 토큰 갱신 (fb_exchange_token, 60일 → 60일 자동 연장) ──
       - name: Refresh Instagram token and update secret
         env:
           INSTAGRAM_TOKEN: ${{ secrets.INSTAGRAM_TOKEN }}
+          META_APP_ID:     ${{ secrets.META_APP_ID }}
+          META_APP_SECRET: ${{ secrets.META_APP_SECRET }}
           GH_TOKEN:        ${{ secrets.GH_PAT }}
         run: |
           python - <<'PYEOF'
           import os, json, urllib.request, subprocess, sys
 
-          token = os.environ.get("INSTAGRAM_TOKEN", "")
-          if not token:
-              print("  INSTAGRAM_TOKEN 없음 — 건너뜀")
+          token     = os.environ.get("INSTAGRAM_TOKEN", "")
+          app_id    = os.environ.get("META_APP_ID", "")
+          app_secret = os.environ.get("META_APP_SECRET", "")
+
+          if not token or not app_id or not app_secret:
+              print("  필수 환경변수 없음 — 건너뜀", file=sys.stderr)
               sys.exit(0)
 
-          url = (f"https://graph.instagram.com/refresh_access_token"
-                 f"?grant_type=ig_refresh_token&access_token={token}")
+          url = (f"https://graph.facebook.com/v25.0/oauth/access_token"
+                 f"?grant_type=fb_exchange_token"
+                 f"&client_id={app_id}&client_secret={app_secret}"
+                 f"&fb_exchange_token={token}")
           try:
               with urllib.request.urlopen(url) as r:
                   data = json.loads(r.read())
+          except urllib.error.HTTPError as e:
+              err = json.loads(e.read().decode()).get("error", {})
+              print(f"  Instagram 토큰 갱신 실패: {err.get('message','')[:80]}", file=sys.stderr)
+              sys.exit(0)  # 메인 업데이트는 이미 끝났으므로 워크플로우 자체는 실패시키지 않음
           except Exception as e:
               print(f"  Instagram 토큰 갱신 실패: {e}", file=sys.stderr)
-              sys.exit(0)  # 메인 업데이트는 이미 끝났으므로 워크플로우 자체는 실패시키지 않음
+              sys.exit(0)
 
           new_token = data.get("access_token", "")
           if not new_token:
-              print("  Instagram 응답에 access_token 없음", file=sys.stderr)
+              print("  응답에 access_token 없음", file=sys.stderr)
               sys.exit(0)
-
-          days = int(data.get("expires_in", 0)) // 86400
 
           # 토큰 값은 stdout/stderr에 출력하지 않고 gh secret set의 stdin으로만 전달
           subprocess.run(["gh", "secret", "set", "INSTAGRAM_TOKEN"],
                           input=new_token, text=True, check=True)
-          print(f"  Instagram 토큰 갱신 완료 — 유효기간 {days}일")
+          print("  Instagram 토큰 갱신 완료 (유효기간 60일 연장)")
           PYEOF
