@@ -1,0 +1,22 @@
+# 자격 증명 — 절대 커밋 금지
+.env
+service_account.json
+*service_account*.json
+*-key.json
+.pinterest_refresh_token
+
+# 로컬 전용 스크립트
+get_instagram_token.py
+get_pinterest_token.py
+trigger_update.py
+update_ig_data.py
+deploy_index.py
+_deploy_security.py
+*.bat
+
+# 산출물 / 캐시
+output/
+__pycache__/
+*.pyc
+.DS_Store
+.claude/
