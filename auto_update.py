@@ -551,6 +551,20 @@ if __name__ == "__main__":
             "ig":  format_ig(ig, key, ko) if ig.get("available") else {},
         }
 
+    # 수집 결과 점검 — 세 소스가 전부 비면 빈 대시보드를 덮어쓰게 되므로 중단한다.
+    healthy = []
+    if any(ga4.get(k) for k, _, _ in PERIODS):
+        healthy.append("GA4")
+    if any(pin.get(k, {}).get("kpi") for k, _, _ in PERIODS):
+        healthy.append("Pinterest")
+    if ig.get("available"):
+        healthy.append("Instagram")
+
+    print(f"\n수집 성공: {', '.join(healthy) if healthy else '없음'} ({len(healthy)}/3)")
+    if not healthy:
+        print("  ❌ 세 소스 모두 실패 — 빈 데이터 배포를 막기 위해 중단합니다.")
+        sys.exit(1)
+
     # index.html 갱신
     print("\nindex.html 갱신 중...")
     html = update_index_html(DATA)
@@ -569,3 +583,8 @@ if __name__ == "__main__":
     print("\n" + "=" * 56)
     print("  완료!")
     print("=" * 56)
+
+    # 배포 실패 시 워크플로우도 실패시킨다.
+    # 예전에는 여기서 조용히 끝나서, Actions는 초록불인데 대시보드만 멈춰 있었다.
+    if not ok:
+        sys.exit(1)
