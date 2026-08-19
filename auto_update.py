@@ -20,7 +20,7 @@ from main import init_ga4_client, upload_to_github, collect_instagram_data, PROP
 
 from google.analytics.data_v1beta.types import (
     DateRange, Metric, Dimension, RunReportRequest,
-    FilterExpression, Filter,
+    FilterExpression, FilterExpressionList, Filter,
 )
 import urllib.request
 
@@ -102,6 +102,108 @@ def path_filter(prefix):
         )
     ))
 
+# ── 봇 트래픽 자동 탐지 · 제외 ─────────────────────────────────
+# 2026-08 GA4 실측으로 두 종류의 오염을 확인했다. 둘 다 (direct)로 들어온다.
+#   1) 자동 수집형 — 체류 0.5초, PV/세션 1.0. 페이지를 실제로 1회 받아가는 크롤러.
+#   2) 유령세션형 — PV/세션 0.0~0.1. 사이트에 접속조차 하지 않고 측정 ID로
+#      가짜 세션만 쏘는 GA4 측정 프로토콜 스팸.
+#
+# 국가를 고정 목록으로 박아두면 안 된다. 스팸이 국가를 바꿔가며 들어오고
+# (Venezuela·Russia·Morocco가 주 단위로 새로 등장), 반대로 Vietnam·India처럼
+# 정상 유입이 많은 나라 안에 봇이 섞여 들어오기도 한다.
+# 그래서 국가×소스 조합의 행동 지표로 매 실행마다 새로 판별한다.
+BOT_MIN_SESSIONS = 30     # 표본이 이보다 적으면 판정하지 않는다 (과잉 차단 방지)
+BOT_MIN_PV_RATIO = 0.30   # 세션당 페이지뷰. 사람은 최소 1페이지는 연다
+BOT_MIN_DURATION = 5.0    # 초. 사람이 페이지를 인지하는 최소 시간
+
+
+def detect_bot_segments(client, start, end):
+    """국가×소스 조합 중 봇 시그니처를 보이는 것을 찾아낸다."""
+    r = ga4_run(client, start, end,
+                ["sessions", "screenPageViews", "averageSessionDuration"],
+                ["country", "sessionSource"], limit=500)
+    bad = []
+    for row in r.rows:
+        sess = int(float(row.metric_values[0].value))
+        if sess < BOT_MIN_SESSIONS:
+            continue
+        pv  = int(float(row.metric_values[1].value))
+        dur = float(row.metric_values[2].value)
+        if pv / sess < BOT_MIN_PV_RATIO or dur < BOT_MIN_DURATION:
+            bad.append((row.dimension_values[0].value,
+                        row.dimension_values[1].value, sess))
+    return bad
+
+
+def _exclude_pairs(segments):
+    """(국가, 소스) 조합들을 제외하는 FilterExpression."""
+    if not segments:
+        return None
+    pairs = [
+        FilterExpression(and_group=FilterExpressionList(expressions=[
+            FilterExpression(filter=Filter(
+                field_name="country",
+                string_filter=Filter.StringFilter(value=c))),
+            FilterExpression(filter=Filter(
+                field_name="sessionSource",
+                string_filter=Filter.StringFilter(value=s))),
+        ]))
+        for c, s, _ in segments
+    ]
+    return FilterExpression(not_expression=FilterExpression(
+        or_group=FilterExpressionList(expressions=pairs)))
+
+
+_SEG_CACHE: dict = {}
+_BOT_CACHE: dict = {}
+
+def _segments(client, start, end):
+    key = (start, end)
+    if key not in _SEG_CACHE:
+        _SEG_CACHE[key] = detect_bot_segments(client, start, end)
+    return _SEG_CACHE[key]
+
+
+def bot_filter(client, start, end):
+    """해당 기간의 봇 제외 필터. 기간마다 새로 판별하고 캐시한다."""
+    key = (start, end)
+    if key not in _BOT_CACHE:
+        seg = list(_segments(client, start, end))
+
+        # 최근 30일 판정을 합집합으로 더한다.
+        # 분기·연간처럼 긴 구간은 과거 정상 트래픽에 평균이 희석돼,
+        # 최근 급증한 봇이 임계값을 통과해 버린다.
+        # (연간 기준 싱가포르는 PV/세션 1.0·체류 26초로 판정을 빠져나갔다.)
+        now = datetime.now()
+        seg += _segments(client, ds(now - timedelta(days=30)), ds(now))
+
+        merged, seen = [], set()
+        for c, s, n in seg:
+            if (c, s) not in seen:
+                seen.add((c, s))
+                merged.append((c, s, n))
+
+        if merged:
+            tot = sum(n for _, _, n in merged)
+            top = ", ".join(f"{c}/{s}" for c, s, _ in
+                            sorted(merged, key=lambda x: -x[2])[:3])
+            print(f"  🤖 {start}~{end}: {len(merged)}개 구간 제외 "
+                  f"(최대 {tot:,}세션 · {top} …)")
+        _BOT_CACHE[key] = _exclude_pairs(merged)
+    return _BOT_CACHE[key]
+
+
+def clean(client, start, end, extra=None):
+    """봇 제외 필터. extra가 있으면 AND로 결합한다."""
+    bf = bot_filter(client, start, end)
+    if bf is None:
+        return extra
+    if extra is None:
+        return bf
+    return FilterExpression(
+        and_group=FilterExpressionList(expressions=[bf, extra]))
+
+
 SKIP_PATHS = [
     "/work/page/", "/en/work/page/", "/en/work/",
     "/about", "/en/about", "/ci", "/en/ci",
@@ -157,7 +259,8 @@ def collect_ga4_period(client, days: int) -> dict:
 
     # ── KPI ──
     def kpi_vals(st, en):
-        r = ga4_run(client, st, en, ["activeUsers","averageSessionDuration","newUsers"])
+        r = ga4_run(client, st, en, ["activeUsers","averageSessionDuration","newUsers"],
+                    filt=clean(client, st, en))
         if not r.rows:
             return 0, 0.0, 0
         v = r.rows[0].metric_values
@@ -197,7 +300,7 @@ def collect_ga4_period(client, days: int) -> dict:
     # ── Top Content ──
     tc = ga4_run(client, s, e,
                  ["screenPageViews", "averageSessionDuration"],
-                 ["pagePath", "pageTitle"], limit=50)
+                 ["pagePath", "pageTitle"], filt=clean(client, s, e), limit=50)
     top_content = []
     for row in tc.rows:
         path  = row.dimension_values[0].value
@@ -226,7 +329,7 @@ def collect_ga4_period(client, days: int) -> dict:
     # ── Sources ──
     sr = ga4_run(client, s, e,
                  ["sessions", "averageSessionDuration"],
-                 ["sessionSource"], limit=15)
+                 ["sessionSource"], filt=clean(client, s, e), limit=15)
     sources = []
     for row in sr.rows:
         raw   = row.dimension_values[0].value
@@ -243,7 +346,7 @@ def collect_ga4_period(client, days: int) -> dict:
     # ── Countries ──
     cr = ga4_run(client, s, e,
                  ["activeUsers", "averageSessionDuration"],
-                 ["country"], limit=10)
+                 ["country"], filt=clean(client, s, e), limit=10)
     total_c = sum(int(r.metric_values[0].value) for r in cr.rows) or 1
     countries = []
     for row in cr.rows:
@@ -278,7 +381,7 @@ def collect_ga4_period(client, days: int) -> dict:
     def newret_series(prefix):
         r = ga4_run(client, s, e, ["activeUsers"],
                     [dim_name, "newVsReturning"],
-                    filt=path_filter(prefix), limit=200)
+                    filt=clean(client, s, e, path_filter(prefix)), limit=200)
         d: dict = {}
         for row in r.rows:
             k  = row.dimension_values[0].value
