@@ -90,6 +90,18 @@
   .annotation .tier { display: block; font-weight: 600; font-size: 11px; letter-spacing: 0.06em; color: var(--accent); text-transform: uppercase; margin-top: 16px; margin-bottom: 4px; }
   .annotation .tier:first-child { margin-top: 0; }
   .annotation p { color: var(--ink-2); }
+  .chart-hit { fill: transparent; cursor: crosshair; }
+  .chart-guide { stroke: #c8c8c4; stroke-width: 1; stroke-dasharray: 3 3; opacity: 0; pointer-events: none; }
+  .chart-wrap { position: relative; }
+  .chart-tip { position: absolute; z-index: 20; pointer-events: none; opacity: 0;
+    transition: opacity .12s; background: #ffffff; border: 1px solid var(--line-2);
+    border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,.10); padding: 9px 11px;
+    font-size: 12px; line-height: 1.65; white-space: nowrap; color: var(--ink-1); }
+  .chart-tip .tip-date { font-weight: 700; margin-bottom: 5px; font-size: 12.5px; }
+  .chart-tip .tip-row { display: flex; align-items: center; gap: 7px; }
+  .chart-tip .tip-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .chart-tip .tip-lab { color: var(--ink-2); }
+  .chart-tip .tip-val { margin-left: auto; font-family: "JetBrains Mono", monospace; font-weight: 600; padding-left: 12px; }
   .notes-stamp-ok { font-size: 11.5px; color: var(--muted); letter-spacing: 0.02em; margin: -12px 0 20px; }
   .data-table { width: 100%; border-collapse: collapse; background: var(--paper); table-layout: fixed; }
   .data-table th { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: var(--muted); text-transform: uppercase; text-align: left; padding: 11px 14px 11px 0; border-bottom: 1px solid var(--ink); }
@@ -2680,15 +2692,80 @@ function renderSources(data) {
     </tr>`).join('');
 }
 
+
+/* 차트 툴팁 — 마우스 오버 시 실제 날짜와 각 계열 수치를 보여준다.
+   축 라벨(요일·W1·월 이름)만으로는 어느 날짜인지 알 수 없어서 추가했다. */
+function attachChartTooltip(wrap, svg, opts) {
+  const { W, H, pad, n, xOf, titleAt, rowsAt } = opts;
+  if (!n) return;
+  let tip = wrap.querySelector('.chart-tip');
+  if (!tip) { tip = document.createElement('div'); tip.className = 'chart-tip'; wrap.appendChild(tip); }
+
+  const guide = svg.querySelector('.chart-guide');
+  const band = (W - pad.l - pad.r) / Math.max(n - 1, 1);
+
+  const show = (i, evt) => {
+    const rows = rowsAt(i).map(r =>
+      '<div class="tip-row"><span class="tip-dot" style="background:' + r.color + '"></span>'
+      + '<span class="tip-lab">' + r.label + '</span>'
+      + '<span class="tip-val">' + r.value + '</span></div>').join('');
+    tip.innerHTML = '<div class="tip-date">' + titleAt(i) + '</div>' + rows;
+    tip.style.opacity = '1';
+
+    const sr = svg.getBoundingClientRect(), wr = wrap.getBoundingClientRect();
+    const scale = sr.width / W;
+    const cx = sr.left - wr.left + xOf(i) * scale;
+    const tw = tip.offsetWidth;
+    let left = cx + 14;
+    if (left + tw > wr.width - 4) left = cx - tw - 14;
+    tip.style.left = Math.max(4, left) + 'px';
+    const cy = evt ? (evt.clientY - wr.top) : (sr.top - wr.top + sr.height / 2);
+    tip.style.top = Math.max(4, Math.min(cy - tip.offsetHeight / 2, wr.height - tip.offsetHeight - 4)) + 'px';
+
+    if (guide) {
+      guide.setAttribute('x1', xOf(i)); guide.setAttribute('x2', xOf(i));
+      guide.style.opacity = '1';
+    }
+    svg.querySelectorAll('[data-pt]').forEach(c => {
+      c.setAttribute('r', c.getAttribute('data-pt') === String(i) ? '5' : '3');
+    });
+  };
+  const hide = () => {
+    tip.style.opacity = '0';
+    if (guide) guide.style.opacity = '0';
+    svg.querySelectorAll('[data-pt]').forEach(c => c.setAttribute('r', '3'));
+  };
+
+  svg.querySelectorAll('.chart-hit').forEach(r => {
+    const i = +r.getAttribute('data-i');
+    r.addEventListener('mouseenter', e => show(i, e));
+    r.addEventListener('mousemove',  e => show(i, e));
+    r.addEventListener('touchstart', e => show(i, e.touches[0]), { passive: true });
+  });
+  svg.addEventListener('mouseleave', hide);
+}
+
+function hitBands(W, H, pad, n, xOf) {
+  let s = '<line class="chart-guide" y1="' + pad.t + '" y2="' + (H - pad.b) + '"/>';
+  for (let i = 0; i < n; i++) {
+    const half = (W - pad.l - pad.r) / Math.max(n - 1, 1) / 2;
+    const x0 = i === 0 ? pad.l : xOf(i) - half;
+    const x1 = i === n - 1 ? (W - pad.r) : xOf(i) + half;
+    s += '<rect class="chart-hit" data-i="' + i + '" x="' + x0 + '" y="' + pad.t
+       + '" width="' + Math.max(x1 - x0, 1) + '" height="' + (H - pad.t - pad.b) + '"/>';
+  }
+  return s;
+}
+
 function renderNewRetChart(nr) {
   const svg = document.getElementById('newret-chart');
   const W = 700, H = 280, pad = { t:20, r:24, b:32, l:48 };
   const innerW = W-pad.l-pad.r, innerH = H-pad.t-pad.b;
   const series = [
-    { data: nr.krNew,    color: '#1e3a8a', dash: 'none' },
-    { data: nr.krReturn, color: '#1e3a8a', dash: '5 4'  },
-    { data: nr.enNew,    color: '#c19a3c', dash: 'none' },
-    { data: nr.enReturn, color: '#c19a3c', dash: '5 4'  },
+    { data: nr.krNew,    color: '#1e3a8a', dash: 'none', name: '국문 · 신규'   },
+    { data: nr.krReturn, color: '#1e3a8a', dash: '5 4',  name: '국문 · 재방문' },
+    { data: nr.enNew,    color: '#c19a3c', dash: 'none', name: '영문 · 신규'   },
+    { data: nr.enReturn, color: '#c19a3c', dash: '5 4',  name: '영문 · 재방문' },
   ];
   const maxV = Math.max(...series.flatMap(s => s.data)) * 1.12;
   const n = nr.labels.length;
@@ -2707,9 +2784,22 @@ function renderNewRetChart(nr) {
   series.forEach(s => {
     const d = s.data.map((v,i) => `${i===0?'M':'L'}${xOf(i)},${yOf(v)}`).join(' ');
     out += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="2" stroke-dasharray="${s.dash==='none'?'':s.dash}" stroke-linecap="round" stroke-linejoin="round"/>`;
-    s.data.forEach((v,i) => { out += `<circle cx="${xOf(i)}" cy="${yOf(v)}" r="3" fill="${s.color}"/>`; });
+    s.data.forEach((v,i) => { out += `<circle data-pt="${i}" cx="${xOf(i)}" cy="${yOf(v)}" r="3" fill="${s.color}"/>`; });
   });
+  out += hitBands(W, H, pad, n, xOf);
   svg.innerHTML = out;
+
+  const wrap = svg.closest('.chart-card');
+  if (wrap) {
+    wrap.classList.add('chart-wrap');
+    attachChartTooltip(wrap, svg, {
+      W, H, pad, n, xOf,
+      titleAt: (i) => (nr.dates && nr.dates[i]) ? nr.dates[i] : nr.labels[i],
+      rowsAt: (i) => series.map(s => ({
+        color: s.color, label: s.name, value: (s.data[i] ?? 0).toLocaleString() + '명'
+      })),
+    });
+  }
 }
 
 function renderNewRetSummary(nr) {
@@ -2812,8 +2902,25 @@ function renderIGGrowth(ig) {
   });
   const path = values.map((v,i) => `${i===0?'M':'L'}${xOf(i)},${yOf(v)}`).join(' ');
   out += `<path d="${path}" fill="none" stroke="#1e3a8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
-  values.forEach((v,i) => { out += `<circle cx="${xOf(i)}" cy="${yOf(v)}" r="3" fill="#1e3a8a"/>`; });
-  wrap.innerHTML = `<div class="chart-card"><svg viewBox="0 0 ${W} ${H}" style="width:100%;height:${H}px;display:block;">${out}</svg></div>`;
+  values.forEach((v,i) => { out += `<circle data-pt="${i}" cx="${xOf(i)}" cy="${yOf(v)}" r="3" fill="#1e3a8a"/>`; });
+  out += hitBands(W, H, pad, n, xOf);
+  wrap.innerHTML = `<div class="chart-card chart-wrap"><svg viewBox="0 0 ${W} ${H}" style="width:100%;height:${H}px;display:block;">${out}</svg></div>`;
+
+  const card = wrap.querySelector('.chart-card');
+  const svgEl = card.querySelector('svg');
+  attachChartTooltip(card, svgEl, {
+    W, H, pad, n, xOf,
+    titleAt: (i) => labels[i],
+    rowsAt: (i) => {
+      const rows = [{ color: '#1e3a8a', label: '팔로워', value: values[i].toLocaleString() + '명' }];
+      if (i > 0) {
+        const diff = values[i] - values[i-1];
+        rows.push({ color: diff >= 0 ? '#1e3a8a' : '#c0392b', label: '전일 대비',
+                    value: (diff >= 0 ? '+' : '') + diff.toLocaleString() + '명' });
+      }
+      return rows;
+    },
+  });
 }
 
 

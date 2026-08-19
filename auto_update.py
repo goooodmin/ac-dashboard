@@ -46,6 +46,7 @@ def ds(dt):
 # ── 기간 레이블 ───────────────────────────────────────────────
 MONTHS_EN = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 MONTHS_KO = ["","1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"]
+WEEKDAY_KO = ["월","화","수","목","금","토","일"]
 PERIOD_KO  = {7: "주간", 30: "월간", 90: "분기", 365: "연간"}
 PERIOD_SUB = {7: "주간 누적", 30: "월간 누적", 90: "분기 누적", 365: "연간 누적"}
 
@@ -363,20 +364,42 @@ def collect_ga4_period(client, days: int) -> dict:
     if days == 7:
         dim_name = "date"
         def make_labels(keys):
-            return [["월","화","수","목","금","토","일"][
-                datetime.strptime(k, "%Y%m%d").weekday()] for k in keys]
+            return [WEEKDAY_KO[datetime.strptime(k, "%Y%m%d").weekday()] for k in keys]
+        def make_dates(keys):
+            # 축 라벨은 요일뿐이라 실제 날짜가 사라진다. 툴팁용으로 따로 남긴다.
+            out = []
+            for k in keys:
+                dt = datetime.strptime(k, "%Y%m%d")
+                out.append(f"{dt.month}월 {dt.day}일 ({WEEKDAY_KO[dt.weekday()]})")
+            return out
     elif days == 30:
         dim_name = "week"
         def make_labels(keys):
             return [f"W{i+1}" for i in range(len(keys))]
+        def make_dates(keys):
+            # GA4 week 차원은 ISO 주차 번호만 준다. 실제 기간으로 되돌린다.
+            yr = datetime.now().year
+            out = []
+            for k in keys:
+                try:
+                    mon = datetime.fromisocalendar(yr, int(k), 1)
+                except ValueError:
+                    out.append(f"{yr}년 {int(k)}주차"); continue
+                sun = mon + timedelta(days=6)
+                out.append(f"{mon.month}.{mon.day}~{sun.month}.{sun.day}")
+            return out
     elif days == 90:
         dim_name = "month"
         def make_labels(keys):
             return [MONTHS_KO[int(k)] for k in keys]
+        def make_dates(keys):
+            return [f"{datetime.now().year}년 {MONTHS_KO[int(k)]}" for k in keys]
     else:
         dim_name = "month"
         def make_labels(keys):
             return [MONTHS_EN[int(k)] for k in keys]
+        def make_dates(keys):
+            return [f"{datetime.now().year}년 {MONTHS_KO[int(k)]}" for k in keys]
 
     def newret_series(prefix):
         r = ga4_run(client, s, e, ["activeUsers"],
@@ -408,6 +431,7 @@ def collect_ga4_period(client, days: int) -> dict:
     en_t = sum(en_new) + sum(en_ret) or 1
     newRet = {
         "labels":   make_labels(keys) if keys else [],
+        "dates":    make_dates(keys)  if keys else [],
         "krNew":    kr_new, "krReturn": kr_ret,
         "enNew":    en_new, "enReturn": en_ret,
         "summary": {
