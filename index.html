@@ -90,6 +90,7 @@
   .annotation .tier { display: block; font-weight: 600; font-size: 11px; letter-spacing: 0.06em; color: var(--accent); text-transform: uppercase; margin-top: 16px; margin-bottom: 4px; }
   .annotation .tier:first-child { margin-top: 0; }
   .annotation p { color: var(--ink-2); }
+  .notes-stamp-ok { font-size: 11.5px; color: var(--muted); letter-spacing: 0.02em; margin: -12px 0 20px; }
   .data-table { width: 100%; border-collapse: collapse; background: var(--paper); table-layout: fixed; }
   .data-table th { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: var(--muted); text-transform: uppercase; text-align: left; padding: 11px 14px 11px 0; border-bottom: 1px solid var(--ink); }
   .data-table td { padding: 14px 14px 14px 0; border-bottom: 1px solid var(--line-2); font-size: 14px; vertical-align: middle; }
@@ -289,6 +290,7 @@ function checkPassword(){
     </div>
     <p class="section-lede" id="web-kpi-lede">주간 방문자 2,901명 · 평균 체류 2분 50초. 방문 수와 체류 깊이를 함께 읽는다.</p>
     <div class="api-limit-notice"><span class="api-limit-icon">ℹ</span><span class="api-limit-text"><b>봇 트래픽 제외 기준</b> · 체류시간과 세션당 페이지뷰가 사람으로 보기 어려운 유입(자동 수집 봇, 측정 프로토콜 스팸)을 국가×유입소스 단위로 자동 판별해 모든 지표에서 제외했습니다. 2026년 8월 기준 전체 세션의 절반 이상이 이에 해당해, 이전 수치와는 직접 비교할 수 없습니다.</span></div>
+    <div id="notes-stamp" class="notes-stamp-ok"></div>
     <div class="kpi-grid" id="web-kpi-grid"></div>
   </section>
 
@@ -314,14 +316,7 @@ function checkPassword(){
         </thead>
         <tbody id="top-content-tbody"></tbody>
       </table>
-      <aside class="annotation">
-        <span class="tier">읽기</span>
-        <p>뷰 1위와 체류 1위는 종종 다른 콘텐츠. 두 축을 함께 봐야 콘텐츠의 진짜 힘이 드러남.</p>
-        <span class="tier">의미</span>
-        <p>뷰가 많아도 체류가 짧으면 유입 후 이탈. 뷰 × 체류로 콘텐츠 품질을 이원화해 봐야 함.</p>
-        <span class="tier">그래서</span>
-        <p>고뷰·장체류 콘텐츠는 시리즈화. 고뷰·단체류는 첫 화면 개선, 저뷰·장체류는 노출 강화.</p>
-      </aside>
+      <aside class="annotation" id="note-02"></aside>
     </div>
   </section>
 
@@ -348,14 +343,7 @@ function checkPassword(){
         </thead>
         <tbody id="source-tbody"></tbody>
       </table>
-      <aside class="annotation">
-        <span class="tier">읽기</span>
-        <p>Google 검색이 유입 1위. Pinterest는 노출 대비 사이트 유입 전환이 낮음.</p>
-        <span class="tier">의미</span>
-        <p>Pinterest는 저장·탐색 채널이고, Direct와 Referral이 실제 깊은 독자를 데려옴.</p>
-        <span class="tier">그래서</span>
-        <p>Pinterest는 인지 확대용 유지, 깊은 독자층은 Referral 기획에 투자.</p>
-      </aside>
+      <aside class="annotation" id="note-03"></aside>
     </div>
   </section>
 
@@ -379,14 +367,7 @@ function checkPassword(){
         </div>
         <div class="newret-summary" id="newret-summary"></div>
       </div>
-      <aside class="annotation">
-        <span class="tier">읽기</span>
-        <p>영문 신규 비중이 국문보다 높음. 영문은 첫 발견 채널 성격이 강함.</p>
-        <span class="tier">의미</span>
-        <p>국문은 팬층 누적 단계, 영문은 글로벌 독자 신규 확보 단계.</p>
-        <span class="tier">그래서</span>
-        <p>영문 콘텐츠 확충 시 글로벌 신규 확보 효과 기대. 국문은 재방문 깊이 강화.</p>
-      </aside>
+      <aside class="annotation" id="note-04"></aside>
     </div>
   </section>
 
@@ -413,14 +394,7 @@ function checkPassword(){
         </thead>
         <tbody id="country-tbody"></tbody>
       </table>
-      <aside class="annotation">
-        <span class="tier">읽기</span>
-        <p>한국이 압도적 1위. 해외는 중국·미국·싱가포르 순.</p>
-        <span class="tier">의미</span>
-        <p>해외 독자 수는 적어도 체류시간이 길어 깊이 읽는 패턴.</p>
-        <span class="tier">그래서</span>
-        <p>영문 콘텐츠 강화 시 글로벌 체류 품질 유지 가능성 높음.</p>
-      </aside>
+      <aside class="annotation" id="note-05"></aside>
     </div>
   </section>
 
@@ -458,14 +432,7 @@ function checkPassword(){
         </thead>
         <tbody id="pin-top-tbody"></tbody>
       </table>
-      <aside class="annotation">
-        <span class="tier">읽기</span>
-        <p>노출 100만+ 규모, 저장이 클릭보다 7배 많은 패턴.</p>
-        <span class="tier">의미</span>
-        <p>콘텐츠는 저장되지만 사이트 방문으로 이어지지 않는 구조.</p>
-        <span class="tier">그래서</span>
-        <p>핀 설명에 사이트 유입 유도 문구 강화, 링크 클릭 CTA 개선 필요.</p>
-      </aside>
+      <aside class="annotation" id="note-07"></aside>
     </div>
   </section>
 
@@ -489,14 +456,7 @@ function checkPassword(){
     <p class="section-lede">이 기간 반응이 가장 높았던 게시물. 좋아요·댓글·저장을 함께 읽어야 게시물의 진짜 힘이 드러난다.</p>
     <div class="data-with-annotation">
       <div id="ig-top-wrap"></div>
-      <aside class="annotation">
-        <span class="tier">읽기</span>
-        <p>저장이 높은 게시물이 장기 도달로 이어짐. 좋아요보다 저장이 콘텐츠 매력도를 더 정확히 반영.</p>
-        <span class="tier">의미</span>
-        <p>댓글이 많은 게시물은 대화를 유발하는 주제 — 시리즈화 가능.</p>
-        <span class="tier">그래서</span>
-        <p>저장 상위 게시물 주제를 콘텐츠 기획의 기준으로 활용.</p>
-      </aside>
+      <aside class="annotation" id="note-09"></aside>
     </div>
   </section>
 
@@ -510,14 +470,7 @@ function checkPassword(){
     <div id="ig-growth-notice"></div>
     <div class="data-with-annotation">
       <div id="ig-growth-wrap"></div>
-      <aside class="annotation">
-        <span class="tier">읽기</span>
-        <p>팔로워 급증 구간은 바이럴 콘텐츠 또는 외부 노출 이벤트의 흔적.</p>
-        <span class="tier">의미</span>
-        <p>팔로워 수 자체보다 증감 패턴이 채널 건강도를 더 잘 반영.</p>
-        <span class="tier">그래서</span>
-        <p>급증 시점의 콘텐츠 분석 → 재현 가능한 패턴 발굴.</p>
-      </aside>
+      <aside class="annotation" id="note-10"></aside>
     </div>
   </section>
 
@@ -538,6 +491,158 @@ const IG_PENDING = {
   ],
   top: null,
   growth: null,
+};
+
+const NOTES = {
+  "updated": "2026-08-19",
+  "week": {
+    "02": {
+      "read": "톤워크가 919뷰로 2위(84뷰)의 11배지만 체류는 0:42로 하위권. 체류 1위는 라보에이치 두피강화클리닉 AD(2:16), 그 다음이 아모레용산 리뉴얼(1:45)이다.",
+      "mean": "톤워크는 유입은 폭발했으나 페이지에서 붙잡지 못하고 있다. 반대로 스토리형 콘텐츠는 뷰가 10분의 1이어도 3배 더 오래 읽힌다.",
+      "so": "톤워크 상세 페이지의 첫 화면부터 손보는 게 이번 주 가장 효과가 큰 작업. 스토리형은 노출만 늘려도 성과가 따라온다."
+    },
+    "03": {
+      "read": "Direct가 1,846세션(35.0%)으로 1위지만 체류 1:25로 얕다. Google 검색은 1,252세션(23.8%)에 체류 3:50, 네이버 모바일 검색은 823세션(15.6%)에 1:03.",
+      "mean": "같은 네이버라도 모바일 검색 유입은 1분, 데스크톱 검색은 3분으로 갈린다. 모바일은 훑고 나가는 경로다.",
+      "so": "네이버 모바일에서 들어오는 페이지의 모바일 가독성을 우선 점검한다. Direct 급증은 톤워크 외부 공유로 보이므로 출처를 확인해둘 것."
+    },
+    "04": {
+      "read": "국문 신규 82.1%(3,822명) · 재방문 17.9%. 영문은 신규 89.4%(1,187명) · 재방문 10.6%로 신규 비중이 7.3%p 높다.",
+      "mean": "국문은 재방문층이 쌓이기 시작했고, 영문은 아직 첫 방문이 대부분이다. 두 사이트가 다른 단계에 있다.",
+      "so": "영문은 신규 유입을 계속 밀고, 국문은 재방문을 만들 연재·시리즈물에 무게를 둔다."
+    },
+    "05": {
+      "read": "한국 70.9%(체류 3:12), 미국 9.7%(1:59), 중국 6.8%(4:25), 베트남 3.1%(2:26). 태국은 2.5%지만 체류 0:43으로 유독 짧다.",
+      "mean": "중국은 방문 수는 적어도 체류가 가장 길어 밀도 높은 독자층이다. 미국은 방문은 2위지만 깊이는 평균 수준.",
+      "so": "중국·베트남처럼 체류가 긴 시장은 영문 콘텐츠 확충의 우선 대상. 태국은 유입 경로부터 확인이 필요하다."
+    },
+    "07": {
+      "read": "노출 633,369(-43.7%) · 저장 1,959(-41.2%) · 사이트 클릭 309(-41.7%). 저장이 클릭보다 6.3배 많고 CTR은 0.05%.",
+      "mean": "지표 3종이 나란히 40% 넘게 빠진 건 개별 핀 성과가 아니라 노출 자체가 줄었다는 뜻이다. 저장·클릭 비율은 그대로다.",
+      "so": "핀 개선보다 발행 빈도와 노출 회복이 먼저다. 지난주 발행량을 먼저 확인할 것."
+    },
+    "09": {
+      "read": "도달 3,048 · 총 상호작용 116 · 참여율 1.41%. 상위 게시물은 좋아요 25 / 저장 3 수준으로 분기 대표작(저장 1,327)과 격차가 크다.",
+      "mean": "이번 주는 도달과 반응이 모두 평시 수준이다. 저장을 크게 만든 게시물이 없었다.",
+      "so": "분기 최고 성과였던 R&D·패키징 계열 주제를 다시 시도해볼 시점."
+    },
+    "10": {
+      "read": "8.13~8.18 팔로워 5,859 → 5,875로 6일간 +16명. 급증 구간 없이 완만하게 상승했다.",
+      "mean": "외부 노출 이벤트 없이 자연 유입만 있었던 주. 이탈 없이 유지되는 것 자체는 건강한 신호다.",
+      "so": "증가 폭을 키우려면 저장이 많이 나오는 주제로 도달을 먼저 늘려야 한다."
+    }
+  },
+  "month": {
+    "02": {
+      "read": "톤워크 5,583뷰(체류 0:52)로 압도적 1위. 아모레용산 리뉴얼은 548뷰지만 체류 3:21로 가장 깊게 읽혔다.",
+      "mean": "한 달 내내 뷰 1위와 체류 1위가 갈렸다. 톤워크는 트래픽을, 스토리형은 몰입을 만든다.",
+      "so": "두 유형을 같은 잣대로 평가하지 말 것. 톤워크는 전환 지표로, 스토리형은 체류·재방문으로 본다."
+    },
+    "03": {
+      "read": "Google 검색 6,009세션(29.5%·체류 3:43)이 1위, Direct 4,894(24.0%·2:37), 네이버 모바일 3,783(18.6%·1:08), Pinterest 3,315(16.3%·4:00).",
+      "mean": "체류만 보면 Pinterest가 4:00으로 가장 깊다. 유입 규모는 4위지만 들어온 독자의 질은 가장 높다.",
+      "so": "Pinterest를 인지 채널로만 두지 말고 유입 전환을 키울 여지가 있다. 핀 설명의 링크 유도를 손볼 것."
+    },
+    "04": {
+      "read": "국문 총 16,949명 중 신규 79.3%, 영문 3,737명 중 신규 84.6%로 5.3%p 차이. 주차별로 보면 W4에 국문 신규 3,582명으로 정점.",
+      "mean": "영문의 신규 편중이 국문보다 크지만 격차는 5%p대로 좁다. 국문도 아직 신규가 8할이다.",
+      "so": "국문 재방문율 20.7%를 끌어올리는 게 이번 달 과제. 발행 주기를 예측 가능하게 만드는 것이 기본."
+    },
+    "05": {
+      "read": "한국 75.1%(3:33), 미국 6.6%(2:06), 중국 5.8%(3:00), 베트남 4.0%(1:46). 일본은 2.3%에 불과하지만 체류 10:05로 압도적이다.",
+      "mean": "일본 독자는 수가 적어도 한 번 들어오면 10분을 머문다. 다른 어느 시장과도 다른 패턴이다.",
+      "so": "일본을 규모가 아닌 밀도의 시장으로 따로 관리한다. 일본어 또는 영문 심화 콘텐츠 실험 대상."
+    },
+    "07": {
+      "read": "노출 4,573,443(-10.6%) · 저장 13,614(-13.6%) · 클릭 2,061(-9.8%). 상위 핀은 프리메라 마일드 퍼펙트(6만 노출·148 저장).",
+      "mean": "월 단위로는 10%대 감소로 주간(-43%)만큼 급하지 않다. 최근 주에 하락이 몰려 있다는 뜻이다.",
+      "so": "월간 흐름은 아직 완만하나 최근 주 하락이 이어지는지 다음 주에 반드시 재확인할 것."
+    },
+    "09": {
+      "read": "도달 10,964 · 총 상호작용 614 · 참여율 1.41%. 팔로워는 5,875명.",
+      "mean": "참여율 1.41%는 주간과 동일하다. 도달이 늘어도 반응률은 일정하게 유지되고 있다.",
+      "so": "반응률이 안정적이므로 성장의 지렛대는 도달 확대 쪽이다."
+    },
+    "10": {
+      "read": "월간 팔로워 5,875명. 급증 구간 없이 완만한 우상향이 이어졌다.",
+      "mean": "바이럴 없이 유지되는 구간. 이탈이 없다는 점에서 기반은 견고하다.",
+      "so": "계단식 성장을 만들려면 저장률 높은 주제의 발행 빈도를 늘리는 실험이 필요하다."
+    }
+  },
+  "quarter": {
+    "02": {
+      "read": "톤워크 21,076뷰로 2위(1,348뷰)의 15배. 체류 1위는 아모레용산 리뉴얼(3:21), 톤워크는 0:55.",
+      "mean": "분기 전체 뷰가 한 콘텐츠에 쏠렸다. 톤워크를 빼면 사이트 트래픽 구조가 완전히 달라진다.",
+      "so": "지표를 볼 때 톤워크 포함·제외를 나눠 봐야 실제 콘텐츠 성과가 보인다."
+    },
+    "03": {
+      "read": "Google 검색 19,054세션(31.8%), 네이버 모바일 12,926(21.6%·체류 1:05), Direct 11,059(18.5%), Pinterest 10,589(17.7%·3:48).",
+      "mean": "분기 단위로는 검색이 절반 이상(Google+네이버 58.6%)을 만든다. 검색 의존도가 높은 구조다.",
+      "so": "검색 유입이 흔들리면 전체가 흔들린다. Pinterest·AI 검색 등 비검색 경로를 분산 투자 대상으로 볼 것."
+    },
+    "04": {
+      "read": "국문 신규 81.5% · 영문 83.9%로 격차가 2.4%p까지 좁혀졌다. 월별로는 6~7월 국문 신규가 12,600명대로 정점.",
+      "mean": "분기로 보면 두 사이트의 신규 편중이 거의 같아진다. 국문의 재방문 우위가 생각만큼 크지 않다.",
+      "so": "국문을 '팬층 누적 단계'로 단정하기엔 이르다. 재방문 지표를 별도로 추적할 필요가 있다."
+    },
+    "05": {
+      "read": "한국 78.6%(3:09), 중국 4.9%(2:59), 미국 4.7%(2:21), 베트남 4.0%(1:51). 일본은 2.4%에 체류 5:08.",
+      "mean": "해외 상위 4개국이 모두 4~5%대로 고르게 분포한다. 특정 시장 편중 없이 넓고 얕게 퍼져 있다.",
+      "so": "분기 단위 해외 전략은 선택과 집중이 필요하다. 체류가 가장 긴 일본·중국을 우선순위로."
+    },
+    "07": {
+      "read": "분기 Pinterest 지표가 수집되지 않았다. API 조회 한도로 90일 구간 데이터가 비어 있는 상태.",
+      "mean": "데이터 공백이므로 분기 단위 Pinterest 판단은 유보한다.",
+      "so": "월간·주간 수치로 대체 판단하고, 분기 지표가 필요하면 별도 수집 방안을 검토할 것."
+    },
+    "09": {
+      "read": "도달 73,452 · 총 상호작용 4,641. 1위 게시물은 좋아요 669에 저장 1,327로 저장이 좋아요의 2배다.",
+      "mean": "Design x Packaging R&D 게시물은 소비가 아니라 보관되는 콘텐츠였다. 실무 참고자료로 저장된 것으로 보인다.",
+      "so": "R&D·패키징처럼 자료성이 강한 주제를 시리즈화한다. 저장 수를 핵심 지표로 삼을 것."
+    },
+    "10": {
+      "read": "분기 말 기준 팔로워 5,875명. 최근 6일 구간에서 +16명으로 완만하다.",
+      "mean": "분기 내내 급격한 변동 없이 안정적으로 유지됐다.",
+      "so": "안정 구간이므로 새로운 포맷을 시험하기에 부담이 적은 시기다."
+    }
+  },
+  "year": {
+    "02": {
+      "read": "톤워크 22,291뷰가 연간 1위이나, 이 중 21,076뷰가 Q3에 몰려 있다. 2위는 미쟝센 헬로크림 X 잔망루피(2,982뷰).",
+      "mean": "연간 1위는 사실상 최근 3개월의 성과다. 연간 평균으로 보면 콘텐츠별 편차가 훨씬 고르다.",
+      "so": "연간 순위를 콘텐츠 기획 기준으로 쓸 때는 발행 시점을 함께 봐야 한다."
+    },
+    "03": {
+      "read": "Google 검색 69,470세션(32.9%·체류 3:59), Direct 52,516(24.8%), 네이버 모바일 23,992(11.3%), Pinterest 계열 합산 36,852(17.4%).",
+      "mean": "Pinterest를 도메인별로 흩어 보면 과소평가된다. 합치면 네이버를 넘는 3위 채널이고 체류도 4분대로 가장 길다.",
+      "so": "Pinterest를 단일 채널로 묶어 관리하고, 투자 우선순위를 다시 매길 것."
+    },
+    "04": {
+      "read": "국문 총 163,189명 중 신규 79.2%, 영문 22,210명 중 신규 84.2%로 5.0%p 차이. 국문 재방문은 34,011명.",
+      "mean": "1년을 놓고 봐도 신규 8할 구조가 유지된다. 재방문층이 누적되는 속도가 유입 속도를 따라가지 못한다.",
+      "so": "재방문을 만드는 장치(뉴스레터·연재·구독)가 없다는 점이 연간 관점의 가장 큰 공백이다."
+    },
+    "05": {
+      "read": "한국 73.0%(3:43), 중국 11.4%(1:52), 미국 5.1%(2:27), 일본 2.6%(3:28). 중국은 연간 2위지만 분기로는 4.9%로 낮아졌다.",
+      "mean": "중국 비중이 연초에 높았다가 최근 줄었다. 연간 수치만 보면 현재 상황을 잘못 읽게 된다.",
+      "so": "중국 유입 감소의 원인을 따로 확인할 것. 연간 국가 순위는 분기 추이와 함께 읽어야 한다."
+    },
+    "07": {
+      "read": "연간 Pinterest 지표는 API 제약으로 90일 기준 데이터와 동일하게 표시된다. 실제 연간 누계가 아니다.",
+      "mean": "연간 비교나 전년 대비 판단에는 쓸 수 없는 수치다.",
+      "so": "Pinterest 연간 성과가 필요하면 월별 수치를 따로 축적해두는 수밖에 없다."
+    },
+    "09": {
+      "read": "연간 기준 팔로워 5,875명. 상위 게시물은 저장이 좋아요를 앞서는 패턴이 반복된다.",
+      "mean": "1년 내내 저장 중심 반응이 유지됐다. 이 계정은 소비형이 아니라 자료형 채널이다.",
+      "so": "좋아요가 아닌 저장을 성과 기준으로 삼고, 콘텐츠 기획도 자료 가치 중심으로 맞춘다."
+    },
+    "10": {
+      "read": "연간 팔로워 추이는 Instagram API 제약으로 최근 30일 구간만 표시된다. 6일간 +16명.",
+      "mean": "연간 성장 곡선은 확인할 수 없다. 표시된 구간은 안정적이다.",
+      "so": "연간 팔로워 추이가 필요하면 월말 스냅샷을 별도로 기록해두어야 한다."
+    }
+  }
 };
 
 const DATA = {
@@ -2711,8 +2816,36 @@ function renderIGGrowth(ig) {
   wrap.innerHTML = `<div class="chart-card"><svg viewBox="0 0 ${W} ${H}" style="width:100%;height:${H}px;display:block;">${out}</svg></div>`;
 }
 
+
+function renderNotes(period) {
+  const set = (NOTES && NOTES[period]) || {};
+  ["02","03","04","05","07","09","10"].forEach(sec => {
+    const el = document.getElementById("note-" + sec);
+    if (!el) return;
+    const n = set[sec];
+    if (!n) { el.innerHTML = ""; return; }
+    el.innerHTML =
+      '<span class="tier">읽기</span><p>'   + n.read + '</p>' +
+      '<span class="tier">의미</span><p>'   + n.mean + '</p>' +
+      '<span class="tier">그래서</span><p>' + n.so   + '</p>';
+  });
+
+  // 문구 기준일 — 데이터보다 오래되면 눈에 띄게 알린다.
+  const stamp = document.getElementById("notes-stamp");
+  if (stamp && NOTES.updated) {
+    const days = Math.floor((Date.now() - new Date(NOTES.updated)) / 86400000);
+    const stale = days >= 14;
+    stamp.innerHTML = stale
+      ? '<b>해석 문구가 ' + days + '일 전(' + NOTES.updated + ') 기준입니다.</b> '
+        + '아래 숫자는 최신이지만 읽기·의미·그래서는 그 시점의 데이터를 근거로 쓰였습니다.'
+      : '해석 문구 기준일 · ' + NOTES.updated;
+    stamp.className = stale ? "api-limit-notice" : "notes-stamp-ok";
+  }
+}
+
 function render(period) {
   const d = DATA[period];
+  renderNotes(period);
   document.getElementById('web-kpi-tag').textContent = d.tag;
   document.getElementById('pin-kpi-tag').textContent = d.tag;
   document.getElementById('web-kpi-lede').textContent = d.lede;
