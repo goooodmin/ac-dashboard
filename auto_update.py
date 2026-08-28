@@ -696,6 +696,18 @@ if __name__ == "__main__":
     print("\nindex.html 갱신 중...")
     html = update_index_html(DATA)
 
+    # 해석 문구 자동 생성 — 실패해도 데이터 갱신은 계속된다.
+    print("")
+    print("읽기·의미·그래서 문구 생성 중...")
+    try:
+        from generate_notes import refresh_notes
+        new_html = refresh_notes(html, DATA)
+        if new_html != html:
+            html = new_html
+            (BASE_DIR / "index.html").write_text(html, encoding="utf-8")
+    except Exception as ex:
+        print(f"  ❌ 문구 생성 모듈 오류 — 기존 문구 유지: {type(ex).__name__}: {ex}")
+
     # GitHub 배포
     print("\nGitHub 배포 중...")
     date_str = datetime.now().strftime("%Y.%m.%d")

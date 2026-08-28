@@ -27,7 +27,8 @@ jobs:
           pip install \
             google-analytics-data \
             google-auth \
-            python-dotenv
+            python-dotenv \
+            anthropic
 
       # ── 4. GA4 서비스 계정 JSON 파일 생성 ───────────────────
       - name: Write GA4 service account credentials
@@ -46,6 +47,7 @@ jobs:
           GITHUB_TOKEN:         ${{ secrets.GH_PAT }}
           GITHUB_USERNAME:      goooodmin
           GITHUB_REPO:          ac-dashboard
+          ANTHROPIC_API_KEY:    ${{ secrets.ANTHROPIC_API_KEY }}
         run: python auto_update.py
 
       # ── 6. Pinterest 토큰 갱신 (refresh_token은 매 호출 시 회전됨) ──
