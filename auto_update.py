@@ -113,9 +113,24 @@ def path_filter(prefix):
 # (Venezuela·Russia·Morocco가 주 단위로 새로 등장), 반대로 Vietnam·India처럼
 # 정상 유입이 많은 나라 안에 봇이 섞여 들어오기도 한다.
 # 그래서 국가×소스 조합의 행동 지표로 매 실행마다 새로 판별한다.
-BOT_MIN_SESSIONS = 30     # 표본이 이보다 적으면 판정하지 않는다 (과잉 차단 방지)
-BOT_MIN_PV_RATIO = 0.30   # 세션당 페이지뷰. 사람은 최소 1페이지는 연다
-BOT_MIN_DURATION = 5.0    # 초. 사람이 페이지를 인지하는 최소 시간
+#
+# 2026-09 추가 — 크롤러가 체류시간을 늘려 판정을 빠져나가기 시작했다.
+# 싱가포르 크롤러 평균 체류: 8월 1초 → 8/31주 8초 → 9/7주 5초로 올라오며
+# 5초 기준선에 딱 붙었고, 주간 판정으로는 더 이상 안 걸린다(주 938세션).
+# 최근 30일 판정과의 합집합 덕분에만 제외되던 상태라, 8월 급증분이
+# 30일 창에서 빠지면 그대로 정상 트래픽으로 되살아난다.
+#
+# 그래서 "딱 한 페이지만 받아가고 곧바로 나간다"는 조건을 따로 둔다.
+# 사람은 한 페이지만 보더라도 30초는 머문다 — 실측으로 확인한 경계다.
+#   · 잡히는 것 : 싱가포르 (direct) PV/세션 1.03 · 체류 5초
+#   · 살아남는 것: 모바일 네이버 PV/세션 1.91 · 체류 57초 (실 유입)
+#                  일본 Pinterest PV/세션 1.13 · 체류 166초 (PV는 낮지만 오래 머문다)
+# 두 지표를 함께 봐야 갈린다. 어느 한쪽만으로는 정상 유입을 오차단한다.
+BOT_MIN_SESSIONS = 30      # 표본이 이보다 적으면 판정하지 않는다 (과잉 차단 방지)
+BOT_MIN_PV_RATIO = 0.30    # 이보다 낮으면 페이지를 아예 안 연 유령세션
+BOT_MIN_DURATION = 5.0     # 초. 사람이 페이지를 인지하는 최소 시간
+BOT_CRAWL_PV_RATIO = 1.20  # 크롤러: 딱 한 페이지만 받아간다
+BOT_CRAWL_DURATION = 30.0  # 그리고 30초 안에 나간다
 
 
 def detect_bot_segments(client, start, end):
@@ -130,7 +145,11 @@ def detect_bot_segments(client, start, end):
             continue
         pv  = int(float(row.metric_values[1].value))
         dur = float(row.metric_values[2].value)
-        if pv / sess < BOT_MIN_PV_RATIO or dur < BOT_MIN_DURATION:
+        ratio = pv / sess
+        ghost   = ratio < BOT_MIN_PV_RATIO       # 접속조차 안 한 가짜 세션
+        instant = dur < BOT_MIN_DURATION         # 인지 불가능한 체류
+        crawler = ratio < BOT_CRAWL_PV_RATIO and dur < BOT_CRAWL_DURATION
+        if ghost or instant or crawler:
             bad.append((row.dimension_values[0].value,
                         row.dimension_values[1].value, sess))
     return bad
